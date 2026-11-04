@@ -202,9 +202,9 @@ public abstract class NvEventQueueActivity
 
     public native void sendCommand(byte[] str);
 
-    // Типы
-    // 1 - Меню
-    // 2 - Сервер
+    // Types
+    // 1 - Menu
+    // 2 - Server
     public native void sendRPC(int type, byte[] str, int action);
 
     public native int getLastServer();

@@ -8,19 +8,19 @@ import { styles } from './DonateItemStyle';
 
 const exclusives = [
   {
-    msg: 'Популярно',
+    msg: 'Popular',
     style: 'badge-success',
   },
   {
-    msg: 'Акция',
+    msg: 'Sale',
     style: 'badge-danger',
   },
   {
-    msg: 'Эксклюзив',
+    msg: 'Exclusive',
     style: 'badge-info',
   },
   {
-    msg: 'Супер акция',
+    msg: 'Super sale',
     style: 'badge-info',
   },
 ];

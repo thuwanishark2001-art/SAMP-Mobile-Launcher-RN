@@ -55,7 +55,7 @@ public class Menu {
         this.menuTitle = activity.findViewById(R.id.br_menu_title);
         if (!z) {
             setMenu();
-            this.menuTitle.setText("Действия");
+            this.menuTitle.setText("Actions");
             setDataInRecyclerView((dataDialogMenu, view) -> {
                 index = dataDialogMenu.getId();
                 view.startAnimation(anim);
@@ -76,7 +76,7 @@ public class Menu {
             return;
         }
         setDialogMenu();
-        this.menuTitle.setText("Общение");
+        this.menuTitle.setText("Interaction");
         setDataInRecyclerView((dataDialogMenu, view) -> {
             index = dataDialogMenu.getId();
             view.startAnimation(anim);
@@ -104,24 +104,24 @@ public class Menu {
 
     private void setMenu() {
         this.dataDialogMenuArrayList.clear();
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(398, R.drawable.br_menu_compass, "Навигатор"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(1, R.drawable.br_menu_taxi, "Вызов такси"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(2, R.drawable.br_menu_menu, "Меню"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(3, R.drawable.br_menu_chat, "Общение"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(4, R.drawable.br_menu_bag, "Инвентарь"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(5, R.drawable.br_menu_anim, "Анимации"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(6, R.drawable.br_menu_ruble, "Донат"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(7, R.drawable.br_menu_car, "Автомобили"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(398, R.drawable.br_menu_compass, "Navigator"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(1, R.drawable.br_menu_taxi, "Call a taxi"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(2, R.drawable.br_menu_menu, "Menu"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(3, R.drawable.br_menu_chat, "Interaction"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(4, R.drawable.br_menu_bag, "Inventory"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(5, R.drawable.br_menu_anim, "Animations"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(6, R.drawable.br_menu_ruble, "Donate"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(7, R.drawable.br_menu_car, "Vehicles"));
     }
 
     private void setDialogMenu() {
         this.dataDialogMenuArrayList.clear();
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(8, R.drawable.menu_passport, "Передать паспорт"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(9, R.drawable.menu_med, "Передать мед.карту"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(10, R.drawable.menu_paper, "Передать лицензии"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(11, R.drawable.menu_lic, "Передать ПТС"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(12, R.drawable.menu_exchange, "Совершить обмен"));
-        this.dataDialogMenuArrayList.add(new DataDialogMenu(13, R.drawable.menu_back, "Назад"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(8, R.drawable.menu_passport, "Show passport"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(9, R.drawable.menu_med, "Show medical card"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(10, R.drawable.menu_paper, "Show licenses"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(11, R.drawable.menu_lic, "Show vehicle title"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(12, R.drawable.menu_exchange, "Trade"));
+        this.dataDialogMenuArrayList.add(new DataDialogMenu(13, R.drawable.menu_back, "Back"));
     }
 
     private void setDataInRecyclerView(DialogMenuAdapter.OnUserClickListener onUserClickListener, ArrayList<DataDialogMenu> arrayList, RecyclerView recyclerView, final View view, int i) {

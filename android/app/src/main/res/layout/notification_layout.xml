@@ -62,7 +62,7 @@
                     android:fontFamily="@font/muller_regular"
                     android:lineSpacingMultiplier="0.85"
                     android:minWidth="40dp"
-                    android:text="Ошибка!"
+                    android:text="Error!"
                     android:textColor="#ffffffff"
                     android:textSize="11sp" />
 
@@ -77,7 +77,7 @@
                     android:minHeight="30dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="Продолжить"
+                    android:text="Continue"
                     android:textAllCaps="false"
                     android:textColor="#ffffffff"
                     android:textSize="11sp" />

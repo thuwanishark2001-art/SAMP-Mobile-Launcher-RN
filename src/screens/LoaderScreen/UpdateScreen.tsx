@@ -45,14 +45,14 @@ export const UpdateScreen = React.memo(() => {
       <LoaderContainer>
         <KeepAwake />
         <Text style={[styles.title, styles.titleUppercase]}>
-          Обновление игры
+          Updating game
         </Text>
         <View>
           <Text style={styles.progressTitle}>
             <Text style={styles.progressName}>{download.fileName}</Text>
             <Text style={styles.progressMemory}>
               {' '}
-              [{formatSizeUnits(currentBytes)} из {formatSizeUnits(needBytes)}]
+              [{formatSizeUnits(currentBytes)} of {formatSizeUnits(needBytes)}]
             </Text>
           </Text>
 
@@ -69,7 +69,7 @@ export const UpdateScreen = React.memo(() => {
           />
 
           <Text style={styles.progressSubtitle}>
-            Обновление файлов игры [{download.numberOfDownloads || 0} из{' '}
+            Updating game files [{download.numberOfDownloads || 0} of{' '}
             {compare.rejectCount}]
           </Text>
           <Text style={styles.progressPercent}>

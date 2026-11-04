@@ -59,7 +59,7 @@ export const InitiationScreen = React.memo(
     return (
       <LoaderContainer>
         <View style={styles.progress}>
-          <Text style={styles.starting}>ИДЕТ ЗАГРУЗКА ПРИЛОЖЕНИЯ...</Text>
+          <Text style={styles.starting}>LOADING...</Text>
           <View style={styles.progressPercent}>
             {!isInitial && (
               <Progress.Bar

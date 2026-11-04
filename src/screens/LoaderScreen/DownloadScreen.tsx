@@ -36,13 +36,13 @@ export const DownloadScreen = React.memo(() => {
   return (
     <LoaderContainer>
       <KeepAwake />
-      <Text style={[styles.title, styles.titleUppercase]}>Загрузка игры</Text>
+      <Text style={[styles.title, styles.titleUppercase]}>Downloading game</Text>
       <View>
         <Text style={styles.progressTitle}>
           <Text style={styles.progressName}>{download.fileName}</Text>
           <Text style={styles.progressMemory}>
             {' '}
-            [{formatSizeUnits(download.currentBytes || 0)} из{' '}
+            [{formatSizeUnits(download.currentBytes || 0)} of{' '}
             {formatSizeUnits(download.needBytes || 0)}]
           </Text>
         </Text>
@@ -60,7 +60,7 @@ export const DownloadScreen = React.memo(() => {
         />
 
         <Text style={styles.progressSubtitle}>
-          Загрузка файлов игры [{numberOfDownloads} из{' '}
+          Downloading game files [{numberOfDownloads} of{' '}
           {compare.successCount + compare.rejectCount}]
         </Text>
         <Text style={styles.progressPercent}>{loaders > 0 ? loaders : 0}%</Text>
