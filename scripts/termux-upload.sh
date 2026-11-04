@@ -11,12 +11,21 @@
 #
 #   curl -fsSL .../termux-upload.sh | bash -s -- /sdcard/Download/game.zip
 #
+# Add --merge to add the files to what the server has instead of replacing it.
+#
 # Settings: SERVER (default root@65.20.88.67), STORAGE (default /storage/emulated/0)
 set -euo pipefail
 
 SERVER="${SERVER:-root@65.20.88.67}"
 STORAGE="${STORAGE:-/storage/emulated/0}"
-SRC="${1:-}"
+SRC=""
+IMPORT_OPTS=""
+for arg in "$@"; do
+	case "$arg" in
+	--merge) IMPORT_OPTS="--merge" ;; # add to the server's files instead of replacing them
+	*) SRC="$arg" ;;
+	esac
+done
 SSH_OPTS=(-o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30)
 
 ask() { # prompt from the keyboard even when this script is piped into bash
@@ -76,7 +85,9 @@ fi
 
 SIZE=$(du -sb "$SRC" | cut -f1)
 echo "==> Source: $SRC ($(du -sh "$SRC" | cut -f1))"
-[ "$(ask "Upload this to $SERVER and replace the game files there? [y/N] ")" = "y" ] || exit 1
+ACTION="replace the game files there"
+[ -n "$IMPORT_OPTS" ] && ACTION="add it to the game files there"
+[ "$(ask "Upload this to $SERVER and $ACTION? [y/N] ")" = "y" ] || exit 1
 echo "==> Uploading. Enter the server's root password (from the Vultr page) when asked."
 [ "$HAVE_PV" = 1 ] || echo "    This can take 10-30 minutes for 1-2 GB and shows nothing until it ends."
 
@@ -85,13 +96,13 @@ if [ -d "$SRC" ]; then
 		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
 			rm -rf /root/kingmakers-upload && mkdir -p /root/kingmakers-upload
 			tar -xf - -C /root/kingmakers-upload
-			kingmakers-import /root/kingmakers-upload
+			kingmakers-import /root/kingmakers-upload '"$IMPORT_OPTS"'
 			rm -rf /root/kingmakers-upload'
 else
 	progress "$SIZE" <"$SRC" |
 		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
 			cat > /root/kingmakers-upload.zip
-			kingmakers-import /root/kingmakers-upload.zip
+			kingmakers-import /root/kingmakers-upload.zip '"$IMPORT_OPTS"'
 			rm -f /root/kingmakers-upload.zip'
 fi
 
