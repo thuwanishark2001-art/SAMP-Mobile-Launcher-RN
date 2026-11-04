@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- button_red_rectangle: #fff24c12 -->
-    <!-- Цвет фона для левой кнопки -->
+    <!-- Left button background colour -->
     <color name="tab_button_gradient_start">#FF47152F</color>
     <color name="tab_button_gradient_end">#FFFF0084</color>
  

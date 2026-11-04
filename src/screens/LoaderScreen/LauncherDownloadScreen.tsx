@@ -54,7 +54,7 @@ export const LauncherDownloadScreen = React.memo(() => {
   return (
     <LoaderContainer>
       <Text style={[styles.title, styles.titleUppercase]}>
-        Новая версия лаунчера
+        New launcher version
       </Text>
 
       <View style={styles.progress}>
@@ -79,9 +79,9 @@ const LauncherDownload = (props: { onPressUpdateHandler: () => void }) => {
   return (
     <>
       <Text style={styles.alert}>
-        Нажмите
-        <Text style={styles.accent}> загрузить</Text>, чтобы подтвердить
-        {'\n'} загрузку лаунчера.
+        Tap
+        <Text style={styles.accent}> download</Text> to confirm
+        {'\n'} downloading the launcher.
       </Text>
       <View style={styles.buttons}>
         <ButtonLauncher
@@ -89,7 +89,7 @@ const LauncherDownload = (props: { onPressUpdateHandler: () => void }) => {
           background={'#5476db'}
           IconLeft={downloadSvg}
           onPress={props.onPressUpdateHandler}>
-          Загрузить
+          Download
         </ButtonLauncher>
       </View>
     </>
@@ -99,14 +99,14 @@ const LauncherDownload = (props: { onPressUpdateHandler: () => void }) => {
 const LauncherDownloadError = (props: { onPressUpdateHandler: () => void }) => {
   return (
     <>
-      <Text style={styles.alert}>Произошла ошибка при загрузки</Text>
+      <Text style={styles.alert}>Download failed</Text>
       <View style={styles.buttons}>
         <ButtonLauncher
           background={'#5476db'}
           btnWidth={'100%'}
           IconLeft={ReloadSvg}
           onPress={props.onPressUpdateHandler}>
-          Повтор
+          Retry
         </ButtonLauncher>
       </View>
     </>
@@ -123,7 +123,7 @@ const LauncherDownloadStart = (props: {
     <>
       <Text style={[styles.progressTitle, { textAlign: 'center' }]}>
         <Text style={[styles.progressMemory]}>
-          [{formatSizeUnits(props.currentBytes)} из{' '}
+          [{formatSizeUnits(props.currentBytes)} of{' '}
           {formatSizeUnits(props.needBytes)}]
         </Text>
       </Text>

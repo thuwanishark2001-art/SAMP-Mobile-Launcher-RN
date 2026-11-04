@@ -76,7 +76,7 @@ export const MonitoringItem = React.memo(
                   </>
                 )}
                 {!props.loading && !props.status && (
-                  <Text style={styles.online}>Недоступно</Text>
+                  <Text style={styles.online}>Offline</Text>
                 )}
               </View>
             </View>

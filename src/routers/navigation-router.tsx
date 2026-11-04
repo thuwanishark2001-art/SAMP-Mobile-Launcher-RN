@@ -109,7 +109,7 @@ const Tabs = AnimatedTabBarNavigator();
 export const TabBarNavigation = React.memo(() => {
   return (
     <Tabs.Navigator
-      initialRouteName="Играть"
+      initialRouteName="Play"
       backBehavior={'initialRoute'}
       tabBarOptions={{
         activeTintColor: '#ffffff',
@@ -123,7 +123,7 @@ export const TabBarNavigation = React.memo(() => {
         tabBarBackground: '#212231',
       }}>
       <Tabs.Screen
-        name="Донат"
+        name="Donate"
         component={DonateScreen}
         options={{
           headerShown: true,
@@ -135,7 +135,7 @@ export const TabBarNavigation = React.memo(() => {
         }}
       />
       <Tabs.Screen
-        name="Играть"
+        name="Play"
         component={GameScreen}
         options={{
           headerShown: true,
@@ -147,7 +147,7 @@ export const TabBarNavigation = React.memo(() => {
         }}
       />
       <Tabs.Screen
-        name="Настройки"
+        name="Settings"
         component={SettingsScreen}
         options={{
           headerShown: true,

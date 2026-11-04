@@ -47,7 +47,7 @@ return new Promise(async () => {
 		bytes: fs.statSync(clientPaths[0]).size,
 	};
 
-	// Cache основной
+	// Main cache
 	const filePaths = await findFiles(`${path.resolve(dirCache)}/**/*`);
 	for (const filePath of filePaths) {
 		if (!fs.lstatSync(filePath).isDirectory()) {
@@ -72,7 +72,7 @@ return new Promise(async () => {
 		}
 	}
 
-	// Кеш зимний
+	// Winter cache
 	const fileSnowPaths = await findFiles(`${path.resolve(dirCacheSnow)}/**/*`);
 	for (const filePath of fileSnowPaths) {
 		if (!fs.lstatSync(filePath).isDirectory()) {
@@ -97,7 +97,7 @@ return new Promise(async () => {
 		}
 	}
 
-	// Cache меrge
+	// Merged cache
 	const fileMergePaths = await findFiles(`${path.resolve(dirCache)}/**/*`);
 	for (const filePath of filePaths) {
 		if (!fs.lstatSync(filePath).isDirectory()) {
@@ -123,7 +123,7 @@ return new Promise(async () => {
 		}
 	}
 
-	// Cache меrge
+	// Merged cache
 	const cacheMode = [];
 	let cacheModeId = 1;
 	const fileModePaths = await findFiles(`${path.resolve(dirCache)}/**/*`);
@@ -170,11 +170,11 @@ return new Promise(async () => {
 						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
 						events: [
 							{
-								title: 'Акция x2',
+								title: 'x2 Promo',
 								style: 'red',
 							},
 							{
-								title: 'Контейнеры',
+								title: 'Containers',
 								style: 'blue',
 							},
 						],
@@ -192,11 +192,11 @@ return new Promise(async () => {
 						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
 						events: [
 							{
-								title: 'Акция x2',
+								title: 'x2 Promo',
 								style: 'red',
 							},
 							{
-								title: 'Контейнеры',
+								title: 'Containers',
 								style: 'blue',
 							},
 						],
@@ -216,7 +216,7 @@ return new Promise(async () => {
 
 	console.log('Distribution dir: ' + distributionGeneratePath);
 }).catch(error => {
-	console.log('Ошибка', error);
+	console.log('Error', error);
 });
 
 function unixTimeStamp(time) {

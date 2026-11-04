@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Kingmakers RP</string>
 
-    <string name="players_list_header_dialog">Список игроков</string>
+    <string name="players_list_header_dialog">Player list</string>
     <string name="players_list_header_first_column">ID</string>
-    <string name="players_list_header_fourth_column">Пинг</string>
-    <string name="players_list_header_second_column">Ник игрока</string>
-    <string name="players_list_header_third_column">Уровень</string>
-    <string name="players_list_search_hint">Поиск игрока</string>
+    <string name="players_list_header_fourth_column">Ping</string>
+    <string name="players_list_header_second_column">Nickname</string>
+    <string name="players_list_header_third_column">Level</string>
+    <string name="players_list_search_hint">Search players</string>
 </resources>

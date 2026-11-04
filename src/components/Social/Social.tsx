@@ -13,7 +13,7 @@ import { styles } from './SocialStyle';
 // Buttons whose link is empty in .env are hidden.
 export const socials = [
   {
-    title: 'Сайт',
+    title: 'Website',
     link: LINK_SITE,
     icon: logoLinkIcon,
   },
@@ -41,7 +41,7 @@ export const Social = React.memo(() => {
 
   return (
     <View style={styles.social}>
-      <Text style={styles.title}>Социальные сети</Text>
+      <Text style={styles.title}>Social media</Text>
       <View style={styles.body}>
         {socials.map((el, key) => (
           <LinearGradient

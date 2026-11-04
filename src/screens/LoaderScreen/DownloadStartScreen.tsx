@@ -28,10 +28,10 @@ export const DownloadStartScreen = React.memo(
 
     return (
       <LoaderContainer>
-        <Text style={styles.titleSub}>Привет 👋</Text>
+        <Text style={styles.titleSub}>Hi there 👋</Text>
         <Text style={styles.subtitle}>
-          Рады видеть тебя на{'\n'}
-          нашем проекте!
+          Welcome to{'\n'}
+          Kingmakers RP!
         </Text>
         <View style={styles.buttons}>
           <ButtonLauncher
@@ -39,7 +39,7 @@ export const DownloadStartScreen = React.memo(
             background={'#5476db'}
             IconLeft={DownloadSvg}
             onPress={onPressDownload}>
-            Скачать игру
+            Download game
           </ButtonLauncher>
         </View>
       </LoaderContainer>

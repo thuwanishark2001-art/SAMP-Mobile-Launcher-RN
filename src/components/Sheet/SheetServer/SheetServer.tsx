@@ -106,12 +106,12 @@ export const SheetServerComponent = React.memo(
             )}
             {!server?.loading && !server?.status && (
               <Text style={styles.onlineText}>
-                <Text style={styles.online}>Недоступно</Text>
+                <Text style={styles.online}>Offline</Text>
               </Text>
             )}
           </View>
           <View style={styles.event}>
-            <Text style={styles.eventTitle}>События сервера:</Text>
+            <Text style={styles.eventTitle}>Server events:</Text>
             <View style={styles.eventContent}>
               {server?.events &&
                 server?.events.map(el => (
@@ -121,7 +121,7 @@ export const SheetServerComponent = React.memo(
                 ))}
 
               {!server?.events?.length && (
-                <Event color={'light'}>Нет активных событий</Event>
+                <Event color={'light'}>No active events</Event>
               )}
             </View>
           </View>
@@ -131,7 +131,7 @@ export const SheetServerComponent = React.memo(
               onPress={onPressPlayHandler}
               IconRight={PlaySvg}
               btnWidth={'100%'}>
-              Подключиться
+              Connect
             </ButtonLauncher>
           </View>
         </View>

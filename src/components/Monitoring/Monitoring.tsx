@@ -21,7 +21,7 @@ export const MonitoringComponent = React.memo(
 
     return (
       <View style={styles.monitoring}>
-        <Text style={styles.title}>Выбор сервера</Text>
+        <Text style={styles.title}>Choose a server</Text>
         <View style={styles.monitorings}>
           {servers.map(el => {
             return el.show || localhost ? (
