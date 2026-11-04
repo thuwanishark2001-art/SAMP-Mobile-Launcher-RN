@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Upload the GTA SA game files from this Android phone to the Kingmakers RP
+# server and import them, using Termux. Run in Termux:
+#
+#   curl -fsSL https://raw.githubusercontent.com/thuwanishark2001-art/SAMP-Mobile-Launcher-RN/main/scripts/termux-upload.sh | bash
+#
+# It finds the game's files folder (the one holding texdb/) in shared storage,
+# streams it to the server over SSH (you type the server's root password once)
+# and runs kingmakers-import there. To pick the source yourself, pass a folder
+# or a .zip:
+#
+#   curl -fsSL .../termux-upload.sh | bash -s -- /sdcard/Download/game.zip
+#
+# Settings: SERVER (default root@65.20.88.67), STORAGE (default /storage/emulated/0)
+set -euo pipefail
+
+SERVER="${SERVER:-root@65.20.88.67}"
+STORAGE="${STORAGE:-/storage/emulated/0}"
+SRC="${1:-}"
+SSH_OPTS=(-o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30)
+
+ask() { # prompt from the keyboard even when this script is piped into bash
+	local reply
+	read -r -p "$1" reply </dev/tty
+	printf '%s' "$reply"
+}
+
+echo "==> Installing ssh and pv"
+command -v ssh >/dev/null && command -v pv >/dev/null ||
+	pkg install -y openssh pv >/dev/null
+
+if [ ! -r "$STORAGE" ] || [ -z "$(ls -A "$STORAGE" 2>/dev/null)" ]; then
+	echo "==> Termux needs storage access. Tap 'Allow', then run this command again."
+	termux-setup-storage
+	exit 1
+fi
+
+if [ -z "$SRC" ]; then
+	echo "==> Looking for GTA SA game files (a folder containing texdb/) in $STORAGE"
+	mapfile -t FOUND < <(find "$STORAGE" -maxdepth 7 -type d -name texdb 2>/dev/null |
+		xargs -r -n1 dirname | sort -u)
+	if [ "${#FOUND[@]}" -eq 0 ]; then
+		cat >&2 <<EOF
+No game files found. Android hides Android/data from Termux on Android 11+.
+Copy the game's "files" folder (the one with texdb/, data/, audio/ ...) into
+Download with a file manager that can open Android/data (e.g. ZArchiver),
+then run this again, or pass its path:
+  curl -fsSL .../termux-upload.sh | bash -s -- /sdcard/Download/files
+EOF
+		exit 1
+	elif [ "${#FOUND[@]}" -eq 1 ]; then
+		SRC="${FOUND[0]}"
+	else
+		echo "Found several:"
+		for i in "${!FOUND[@]}"; do echo "  $((i + 1))) ${FOUND[$i]}"; done
+		n=$(ask "Which one? [1-${#FOUND[@]}] ")
+		SRC="${FOUND[$((n - 1))]}"
+	fi
+fi
+
+if [ ! -e "$SRC" ]; then
+	echo "Not found: $SRC" >&2
+	exit 1
+fi
+
+SIZE=$(du -sb "$SRC" | cut -f1)
+echo "==> Source: $SRC ($(du -sh "$SRC" | cut -f1))"
+[ "$(ask "Upload this to $SERVER and replace the game files there? [y/N] ")" = "y" ] || exit 1
+echo "==> Uploading. Enter the server's root password (from the Vultr page) when asked."
+
+if [ -d "$SRC" ]; then
+	tar -C "$SRC" -cf - . | pv -s "$SIZE" |
+		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
+			rm -rf /root/kingmakers-upload && mkdir -p /root/kingmakers-upload
+			tar -xf - -C /root/kingmakers-upload
+			kingmakers-import /root/kingmakers-upload
+			rm -rf /root/kingmakers-upload'
+else
+	pv "$SRC" |
+		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
+			cat > /root/kingmakers-upload.zip
+			kingmakers-import /root/kingmakers-upload.zip
+			rm -f /root/kingmakers-upload.zip'
+fi
+
+echo
+echo "Done. Open the Kingmakers RP app; it will download the game files."
