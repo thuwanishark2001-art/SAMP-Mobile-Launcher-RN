@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   case: {
-    width: '22%',
+    flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
