@@ -25,9 +25,20 @@ ask() { # prompt from the keyboard even when this script is piped into bash
 	printf '%s' "$reply"
 }
 
-echo "==> Installing ssh and pv"
-command -v ssh >/dev/null && command -v pv >/dev/null ||
-	pkg install -y openssh pv >/dev/null
+echo "==> Installing ssh"
+command -v ssh >/dev/null || pkg install -y openssh >/dev/null
+# pv only draws the progress bar. Some Termux installs ship a pv that cannot
+# run ("unexpected e_type"), so fall back to plain cat when it fails.
+command -v pv >/dev/null || pkg install -y pv >/dev/null 2>&1 || true
+if pv --version >/dev/null 2>&1; then
+	HAVE_PV=1
+else
+	HAVE_PV=0
+	echo "    (no progress bar: pv does not run here; the upload still works)"
+fi
+progress() { # progress <bytes>: copy stdin to stdout, with a bar if possible
+	if [ "$HAVE_PV" = 1 ]; then pv -s "$1"; else cat; fi
+}
 
 if [ ! -r "$STORAGE" ] || [ -z "$(ls -A "$STORAGE" 2>/dev/null)" ]; then
 	echo "==> Termux needs storage access. Tap 'Allow', then run this command again."
@@ -67,16 +78,17 @@ SIZE=$(du -sb "$SRC" | cut -f1)
 echo "==> Source: $SRC ($(du -sh "$SRC" | cut -f1))"
 [ "$(ask "Upload this to $SERVER and replace the game files there? [y/N] ")" = "y" ] || exit 1
 echo "==> Uploading. Enter the server's root password (from the Vultr page) when asked."
+[ "$HAVE_PV" = 1 ] || echo "    This can take 10-30 minutes for 1-2 GB and shows nothing until it ends."
 
 if [ -d "$SRC" ]; then
-	tar -C "$SRC" -cf - . | pv -s "$SIZE" |
+	tar -C "$SRC" -cf - . | progress "$SIZE" |
 		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
 			rm -rf /root/kingmakers-upload && mkdir -p /root/kingmakers-upload
 			tar -xf - -C /root/kingmakers-upload
 			kingmakers-import /root/kingmakers-upload
 			rm -rf /root/kingmakers-upload'
 else
-	pv "$SRC" |
+	progress "$SIZE" <"$SRC" |
 		ssh "${SSH_OPTS[@]}" "$SERVER" 'set -e
 			cat > /root/kingmakers-upload.zip
 			kingmakers-import /root/kingmakers-upload.zip
