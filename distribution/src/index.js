@@ -5,21 +5,45 @@ const { promisify } = require('util');
 const findFiles = promisify(glob);
 const { md5FileSync } = require('./md5');
 
-const versionHash = Math.random().toString(36).substring(7);
-const distributionGeneratePath = './build/distribution.json';
+// Settings can be overridden with environment variables, e.g.
+//   DIST_DIR=/var/www/kingmakers/mobile SERVER_ADDRESS=1.2.3.4:7777 node src/index.js
+// DIST_DIR must contain cache/, cache_snow/ and launcher/ (each may be empty);
+// distribution.json is written into it.
 
-const dirCache = './../../distributions/cache';
-const dirCacheSnow = './../../distributions/cache_snow';
-const dirLauncher = './../../distributions/launcher';
+// APP_VERSION from the launcher's .env, so the app only offers a launcher
+// update when a newer APK is published.
+function readAppVersion() {
+	const envPath = path.resolve(__dirname, '../../.env');
+	const match = fs.existsSync(envPath)
+		? fs.readFileSync(envPath, 'utf8').match(/^APP_VERSION=(.+)$/m)
+		: null;
+	return match ? match[1].trim() : '0.0.0';
+}
+
+const versionHash = Math.random().toString(36).substring(7);
+
+const distDir = path.resolve(process.env.DIST_DIR || './../../distributions');
+const distributionGeneratePath =
+	process.env.OUT_FILE || path.join(distDir, 'distribution.json');
+
+const dirCache = path.join(distDir, 'cache');
+const dirCacheSnow = path.join(distDir, 'cache_snow');
+const dirLauncher = path.join(distDir, 'launcher');
 
 const projectName = 'Kingmakers RP';
 const packageName = 'com.touch.mobile.dark';
 
-const cdnCache = 'https://game.kingmakers-rp.com/mobile/cache';
-const cdnLauncher = 'https://game.kingmakers-rp.com/mobile/launcher';
+const cdnBase = (process.env.CDN_BASE || 'http://65.20.88.67/mobile').replace(
+	/\/$/,
+	''
+);
+const cdnCache = `${cdnBase}/cache`;
+const cdnLauncher = `${cdnBase}/launcher`;
+const serverIcon = `${cdnBase}/image/server_icon.png`;
+const serverAddress = process.env.SERVER_ADDRESS || '65.20.88.67:7777';
 
-const appVersion = '0.0.39';
-const rss = 'https://kingmakers-rp.com/api/launcer/news';
+const appVersion = process.env.APP_VERSION || readAppVersion();
+const rss = '';
 
 const filesContinue = ['settings.ini', 'gta_sa.set', 'svconfig.ini'];
 const filesIgnore = ['samp_log.txt', 'crash_log.log', 'gtasatelem.set'];
@@ -34,17 +58,16 @@ return new Promise(async () => {
 	const cacheMerge = [];
 	let cacheMergeId = 1;
 
-	// Launcher
-	const clientPaths = await findFiles(
-		`${path.resolve(dirLauncher)}/app-release.apk`
-	);
+	// Launcher (optional: without an APK in launcher/, no update is offered)
+	const clientPath = path.join(dirLauncher, 'app-release.apk');
+	const hasClient = fs.existsSync(clientPath);
 
 	const clientCache = {
 		appVersion,
 		name: `app-release.apk`,
-		hash: await md5FileSync(clientPaths[0]),
-		mtime: unixTimeStamp(fs.statSync(clientPaths[0]).mtime),
-		bytes: fs.statSync(clientPaths[0]).size,
+		hash: hasClient ? await md5FileSync(clientPath) : '',
+		mtime: hasClient ? unixTimeStamp(fs.statSync(clientPath).mtime) : 0,
+		bytes: hasClient ? fs.statSync(clientPath).size : 0,
 	};
 
 	// Main cache
@@ -167,39 +190,23 @@ return new Promise(async () => {
 						id: 1,
 						show: true,
 						version: '1.0',
-						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
-						events: [
-							{
-								title: 'x2 Promo',
-								style: 'red',
-							},
-							{
-								title: 'Containers',
-								style: 'blue',
-							},
-						],
+						icon: serverIcon,
+						// Badges shown on the server card, e.g.
+						// { title: 'x2 Promo', style: 'red' } (style: 'red' | 'blue')
+						events: [],
 						slot: 100,
-						bonus: true,
+						bonus: false,
 						name: 'Kingmakers RP',
 						description: 'SA-MP Mobile',
-						address: '176.32.39.214:7777',
+						address: serverAddress,
 						sampVersion: '0.3.7',
 					},
 					{
 						id: 100,
 						show: false,
 						version: '1.0',
-						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
-						events: [
-							{
-								title: 'x2 Promo',
-								style: 'red',
-							},
-							{
-								title: 'Containers',
-								style: 'blue',
-							},
-						],
+						icon: serverIcon,
+						events: [],
 						slot: 1000,
 						bonus: false,
 						name: 'Localhost',
