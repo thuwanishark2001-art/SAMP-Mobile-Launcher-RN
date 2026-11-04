@@ -120,8 +120,13 @@ SRC="${1:-}"
 TARGET="$DIST_DIR/cache"
 [ "${2:-}" = "snow" ] && TARGET="$DIST_DIR/cache_snow"
 
-if [ -z "$SRC" ] || [ ! -e "$SRC" ]; then
+if [ -z "$SRC" ]; then
 	echo "Usage: kingmakers-import <file.zip or folder> [snow]" >&2
+	exit 1
+fi
+if [ ! -e "$SRC" ]; then
+	echo "Not found: $SRC" >&2
+	echo "Upload the game files zip first. To see what is in /root, run: ls -lh /root" >&2
 	exit 1
 fi
 
