@@ -18,6 +18,7 @@ WEB_ROOT="/var/www/kingmakers"
 DIST_DIR="$WEB_ROOT/mobile"
 CONFIG_FILE="/etc/kingmakers-launcher.env"
 UPDATE_CMD="/usr/local/bin/kingmakers-update"
+IMPORT_CMD="/usr/local/bin/kingmakers-import"
 
 if [ "$(id -u)" -ne 0 ]; then
 	echo "Please run as root (or with sudo)." >&2
@@ -31,7 +32,7 @@ SERVER_ADDRESS="${SERVER_ADDRESS:-$PUBLIC_IP:$SERVER_PORT}"
 echo "==> Installing nginx, Node.js and git"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y -qq nginx nodejs npm git >/dev/null
+apt-get install -y -qq nginx nodejs npm git unzip >/dev/null
 
 echo "==> Fetching launcher code into $APP_DIR"
 if [ -d "$APP_DIR/.git" ]; then
@@ -104,6 +105,60 @@ chmod -R a+rX "\$DIST_DIR"
 EOF
 chmod +x "$UPDATE_CMD"
 
+cat >"$IMPORT_CMD" <<'EOF'
+#!/usr/bin/env bash
+# Replace the game files players download with the contents of a zip.
+#   kingmakers-import /root/game.zip          # main game files -> cache/
+#   kingmakers-import /root/winter.zip snow   # winter-map files -> cache_snow/
+# The zip should hold what goes inside the phone's
+# Android/data/<package>/files/ folder (texdb/, data/, audio/, ...).
+# Extra wrapper folders inside the zip are fine; they are detected.
+set -euo pipefail
+set -a; . /etc/kingmakers-launcher.env; set +a
+
+SRC="${1:-}"
+TARGET="$DIST_DIR/cache"
+[ "${2:-}" = "snow" ] && TARGET="$DIST_DIR/cache_snow"
+
+if [ -z "$SRC" ] || [ ! -e "$SRC" ]; then
+	echo "Usage: kingmakers-import <file.zip or folder> [snow]" >&2
+	exit 1
+fi
+
+WORK=$(mktemp -d)
+trap 'rm -rf "$WORK"' EXIT
+
+if [ -d "$SRC" ]; then
+	ROOT="$SRC"
+else
+	echo "==> Unzipping $SRC"
+	unzip -q "$SRC" -d "$WORK"
+	ROOT="$WORK"
+fi
+
+# Find the folder that holds texdb/ (the game's files/ folder); otherwise
+# step through single wrapper folders.
+TEXDB=$(find "$ROOT" -maxdepth 6 -type d -name texdb -print -quit)
+if [ -n "$TEXDB" ]; then
+	ROOT=$(dirname "$TEXDB")
+else
+	while [ "$(find "$ROOT" -mindepth 1 -maxdepth 1 | wc -l)" -eq 1 ] &&
+		[ -d "$(find "$ROOT" -mindepth 1 -maxdepth 1)" ]; do
+		ROOT=$(find "$ROOT" -mindepth 1 -maxdepth 1)
+	done
+	echo "Warning: no texdb/ folder found; using $ROOT as-is." >&2
+fi
+
+echo "==> Copying game files from $ROOT into $TARGET"
+rm -rf "$TARGET"
+mkdir -p "$TARGET"
+cp -a "$ROOT"/. "$TARGET"/
+
+echo "==> $(find "$TARGET" -type f | wc -l) files, $(du -sh "$TARGET" | cut -f1) in $TARGET"
+kingmakers-update
+EOF
+chmod +x "$IMPORT_CMD"
+
 echo "==> Generating distribution.json"
 "$UPDATE_CMD"
 
@@ -115,8 +170,8 @@ cat <<EOF
 Done. The launcher reads:  http://$PUBLIC_IP/mobile/distribution.json
 SA-MP server it shows:     $SERVER_ADDRESS
 
-Next:
-  1. Put the GTA SA game files in $DIST_DIR/cache
-     (winter-map versions, if any, in $DIST_DIR/cache_snow)
-  2. Run: kingmakers-update
+Next: upload a zip of the GTA SA game files (the contents of the phone's
+Android/data/<package>/files folder) to this server, e.g. /root/game.zip,
+then run:
+  kingmakers-import /root/game.zip
 EOF
