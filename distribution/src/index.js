@@ -12,14 +12,14 @@ const dirCache = './../../distributions/cache';
 const dirCacheSnow = './../../distributions/cache_snow';
 const dirLauncher = './../../distributions/launcher';
 
-const projectName = 'Touch Mobile';
+const projectName = 'Kingmakers RP';
 const packageName = 'com.touch.mobile.dark';
 
-const cdnCache = 'https://game.touch-rp.com/mobile/cache';
-const cdnLauncher = 'https://game.touch-rp.com/mobile/launcher';
+const cdnCache = 'https://game.kingmakers-rp.com/mobile/cache';
+const cdnLauncher = 'https://game.kingmakers-rp.com/mobile/launcher';
 
 const appVersion = '0.0.39';
-const rss = 'https://touch-rp.com/api/launcer/news';
+const rss = 'https://kingmakers-rp.com/api/launcer/news';
 
 const filesContinue = ['settings.ini', 'gta_sa.set', 'svconfig.ini'];
 const filesIgnore = ['samp_log.txt', 'crash_log.log', 'gtasatelem.set'];
@@ -167,7 +167,7 @@ return new Promise(async () => {
 						id: 1,
 						show: true,
 						version: '1.0',
-						icon: 'https://game.touch-rp.com/mobile/image/pro_icon.jpeg',
+						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
 						events: [
 							{
 								title: 'Акция x2',
@@ -180,7 +180,7 @@ return new Promise(async () => {
 						],
 						slot: 100,
 						bonus: true,
-						name: 'PRO - Server',
+						name: 'Kingmakers RP',
 						description: 'SA-MP Mobile',
 						address: '176.32.39.214:7777',
 						sampVersion: '0.3.7',
@@ -189,7 +189,7 @@ return new Promise(async () => {
 						id: 100,
 						show: false,
 						version: '1.0',
-						icon: 'https://game.touch-rp.com/mobile/image/pro_icon.jpeg',
+						icon: 'https://game.kingmakers-rp.com/mobile/image/pro_icon.jpeg',
 						events: [
 							{
 								title: 'Акция x2',

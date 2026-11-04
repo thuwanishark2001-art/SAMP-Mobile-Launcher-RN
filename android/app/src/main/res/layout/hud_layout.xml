@@ -264,7 +264,7 @@
 
     <TextView
         android:id="@+id/hud_server_name"
-        android:layout_width="28dp"
+        android:layout_width="wrap_content"
         android:layout_height="10dp"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/muller_bold"
@@ -273,7 +273,7 @@
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="2"
-        android:text="TOUCH"
+        android:text="KINGMAKERS"
         android:textColor="#FFFFFFFF"
         android:textSize="@dimen/_7sdp"
         app:layout_constraintEnd_toEndOf="@+id/hud_name"
@@ -283,15 +283,16 @@
 
     <TextView
         android:id="@+id/hud_server_name2"
-        android:layout_width="28dp"
+        android:layout_width="wrap_content"
         android:layout_height="10dp"
+        android:layout_marginStart="2dp"
         android:fontFamily="@font/muller_bold"
         android:gravity="start"
         android:shadowColor="#B91B1B1B"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="2"
-        android:text="MOBILE"
+        android:text="RP"
         android:textColor="#F5617B"
         android:textSize="@dimen/_7sdp"
         app:layout_constraintBottom_toBottomOf="@+id/hud_server_name"
