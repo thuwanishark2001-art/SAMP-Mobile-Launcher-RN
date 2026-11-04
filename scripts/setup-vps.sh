@@ -171,15 +171,20 @@ fi
 mkdir -p "$TARGET"
 EXCLUDES=()
 if [ "$MERGE" = 1 ] && [ -d "$ROOT/texdb" ]; then
-	# A texture set's .toc/.tmb index its .dat. If the new files have no .dat
-	# for a set the server already has complete, keep the server's set as is.
+	# A texture set's .toc/.tmb index its .dat, and its .txt lists the same
+	# entries, so a set must come from one source. If the server's copy of a
+	# set has any .dat the new copy lacks (e.g. new has only mobile.dxt.dat,
+	# server has mobile.etc.dat too), keep the server's whole set.
 	for set_dir in "$ROOT"/texdb/*/; do
 		set_name=$(basename "$set_dir")
-		if ! ls "$set_dir"*.dat >/dev/null 2>&1 &&
-			ls "$TARGET/texdb/$set_name/"*.dat >/dev/null 2>&1; then
-			echo "    keeping existing texdb/$set_name (new files have no .dat for it)"
-			EXCLUDES+=(--exclude="./texdb/$set_name")
-		fi
+		for dat in "$TARGET/texdb/$set_name/"*.dat; do
+			[ -e "$dat" ] || continue
+			if [ ! -e "$set_dir$(basename "$dat")" ]; then
+				echo "    keeping existing texdb/$set_name (new files lack $(basename "$dat"))"
+				EXCLUDES+=(--exclude="./texdb/$set_name")
+				break
+			fi
+		done
 	done
 fi
 tar -C "$ROOT" -cf - "${EXCLUDES[@]}" . | tar -C "$TARGET" -xf -
