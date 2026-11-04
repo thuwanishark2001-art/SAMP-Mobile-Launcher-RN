@@ -110,18 +110,26 @@ cat >"$IMPORT_CMD" <<'EOF'
 # Replace the game files players download with the contents of a zip.
 #   kingmakers-import /root/game.zip          # main game files -> cache/
 #   kingmakers-import /root/winter.zip snow   # winter-map files -> cache_snow/
+#   kingmakers-import /root/patch --merge     # add/overwrite files, keep the rest
 # The zip should hold what goes inside the phone's
 # Android/data/<package>/files/ folder (texdb/, data/, audio/, ...).
 # Extra wrapper folders inside the zip are fine; they are detected.
 set -euo pipefail
 set -a; . /etc/kingmakers-launcher.env; set +a
 
-SRC="${1:-}"
+SRC=""
 TARGET="$DIST_DIR/cache"
-[ "${2:-}" = "snow" ] && TARGET="$DIST_DIR/cache_snow"
+MERGE=0
+for arg in "$@"; do
+	case "$arg" in
+	snow) TARGET="$DIST_DIR/cache_snow" ;;
+	--merge) MERGE=1 ;;
+	*) SRC="$arg" ;;
+	esac
+done
 
 if [ -z "$SRC" ]; then
-	echo "Usage: kingmakers-import <file.zip or folder> [snow]" >&2
+	echo "Usage: kingmakers-import <file.zip or folder> [snow] [--merge]" >&2
 	exit 1
 fi
 if [ ! -e "$SRC" ]; then
@@ -154,10 +162,27 @@ else
 	echo "Warning: no texdb/ folder found; using $ROOT as-is." >&2
 fi
 
-echo "==> Copying game files from $ROOT into $TARGET"
-rm -rf "$TARGET"
+if [ "$MERGE" = 1 ]; then
+	echo "==> Merging game files from $ROOT into $TARGET (existing files kept, same names overwritten)"
+else
+	echo "==> Copying game files from $ROOT into $TARGET"
+	rm -rf "$TARGET"
+fi
 mkdir -p "$TARGET"
-cp -a "$ROOT"/. "$TARGET"/
+EXCLUDES=()
+if [ "$MERGE" = 1 ] && [ -d "$ROOT/texdb" ]; then
+	# A texture set's .toc/.tmb index its .dat. If the new files have no .dat
+	# for a set the server already has complete, keep the server's set as is.
+	for set_dir in "$ROOT"/texdb/*/; do
+		set_name=$(basename "$set_dir")
+		if ! ls "$set_dir"*.dat >/dev/null 2>&1 &&
+			ls "$TARGET/texdb/$set_name/"*.dat >/dev/null 2>&1; then
+			echo "    keeping existing texdb/$set_name (new files have no .dat for it)"
+			EXCLUDES+=(--exclude="./texdb/$set_name")
+		fi
+	done
+fi
+tar -C "$ROOT" -cf - "${EXCLUDES[@]}" . | tar -C "$TARGET" -xf -
 
 echo "==> $(find "$TARGET" -type f | wc -l) files, $(du -sh "$TARGET" | cut -f1) in $TARGET"
 kingmakers-update
