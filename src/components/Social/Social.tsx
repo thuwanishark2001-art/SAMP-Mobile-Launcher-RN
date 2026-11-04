@@ -10,6 +10,7 @@ import {
 } from './../../assets/icons';
 import { styles } from './SocialStyle';
 
+// Buttons whose link is empty in .env are hidden.
 export const socials = [
   {
     title: 'Сайт',
@@ -22,7 +23,7 @@ export const socials = [
     icon: vkLinkIcon,
   },
   {
-    title: 'Discrod',
+    title: 'Discord',
     link: LINK_DISCORD,
     icon: discordLinkIcon,
   },
@@ -31,7 +32,7 @@ export const socials = [
     link: LINK_TIKTOK,
     icon: tiktokLinkIcon,
   },
-];
+].filter(el => Boolean(el.link));
 
 export const Social = React.memo(() => {
   const onPressLinkHandler = useCallback(async (link: string) => {
