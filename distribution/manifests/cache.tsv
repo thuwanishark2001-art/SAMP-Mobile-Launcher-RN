@@ -1,4 +1,6 @@
 # path	google_drive_file_id  (from the README "Game cache" folders)
+# texdb/touch/touch.unc.toc/.tmb are left out: the Drive folder has no touch.unc.dat
+# (33 MB per the .toc), and with only the index the game crashes in RLEDecompress.
 SAMP/SAMP.ide	1h_4ZJtmoVLZM02kvLYjpg-lrnYF2-8b2
 SAMP/TIMECYC.DAT	1DgxXh0ZG-SmE_nNHdnucyZSnV0QuIYpG
 SAMP/WEAPON.dat	1cc_VlcHuMKSWMQyXbAtspxOAsPKFSTMn
@@ -302,8 +304,6 @@ texdb/touch/touch.pvr.dat	1YuM1wKSAOblLTqsg14rEymAai5uA1RLF
 texdb/touch/touch.pvr.tmb	1CDXXoXvyVQwDCi7dTGA3h0CvzRTqHV7Q
 texdb/touch/touch.pvr.toc	1IAFJpKfUJL-DETK9bCo1kE7nZ4iYsDUs
 texdb/touch/touch.txt	1YzKmZzpvlnLBzhwqslhHflXP6tqSzuTe
-texdb/touch/touch.unc.tmb	13FN4nwWi17Hvg0xjVBoVznh4DxxdIhwY
-texdb/touch/touch.unc.toc	1KLL8W2mBA-zNtHvyt5u_kBBwHq4oTQuO
 texdb/txd/txd.dxt.tmb	1O5WDUMIx2E6zYdVumY8X7OPpcqFgGtov
 texdb/txd/txd.dxt.toc	1eoG7-Y80874bGhMCR5e05hyP8kaQ3z4B
 texdb/txd/txd.etc.tmb	1PQ46fN0nzAaYmysQVR597WZH_yMH0FKQ
