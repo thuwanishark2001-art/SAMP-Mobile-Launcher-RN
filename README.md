@@ -78,11 +78,11 @@ I do not assist with launcher assembly. If you have knowledge of React Native, y
 1. Rename `.env.example` to `.env`
 2. Provide the necessary parameters.
 
-### Game cache
+### Game files
 
-1. Download [download cache](https://drive.google.com/drive/folders/1Tk6Uhtf96_z_MwqyvJts7CXNxCr14AT3?usp=sharing)
-2. Download [download cache snow](https://drive.google.com/drive/folders/1J7O73eX8xzfMaD8AXMuXS9xodyjWB24G?usp=sharing)
-3. Upload the files to your hosting.
+This repository does not host or link GTA San Andreas game files. Players
+need their own copy of the game. Only put files you made, or have the rights
+to share, on your download server.
 
 ### Distribution
 
